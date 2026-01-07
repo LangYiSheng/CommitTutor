@@ -1,3 +1,6 @@
+from git_utils.models import CommitData
+
+
 class DefectDetector:
     def __init__(self):
         self._loaded = False
@@ -14,7 +17,7 @@ class DefectDetector:
         if not self._loaded:
             self.load()
 
-    def analyze(self, commit_info):
+    def analyze(self, commit_info: CommitData):
         raise NotImplementedError("DefectDetector subclasses must implement analyze().")
 
 
