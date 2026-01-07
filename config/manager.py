@@ -11,6 +11,7 @@ class UserConfig:
     base_url: str
     api_key: str
     model_name: str
+    detector_model: str
 
     @classmethod
     def from_dict(cls, data):
@@ -18,6 +19,7 @@ class UserConfig:
             base_url=data.get("base_url", ""),
             api_key=data.get("api_key", ""),
             model_name=data.get("model_name", ""),
+            detector_model=data.get("detector_model", ""),
         )
 
     def to_dict(self):
@@ -25,6 +27,7 @@ class UserConfig:
             "base_url": self.base_url,
             "api_key": self.api_key,
             "model_name": self.model_name,
+            "detector_model": self.detector_model,
         }
 
 
