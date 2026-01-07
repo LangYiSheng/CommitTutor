@@ -21,7 +21,6 @@ CommitTutor/
   config/              # 配置管理层
   detector/            # 缺陷检测模型层
   git_utils/           # Git 提交抽取与解析
-  workflow/            # 决策逻辑
   main.py              # 入口
 ```
 
