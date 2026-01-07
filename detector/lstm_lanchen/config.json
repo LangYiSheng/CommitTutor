@@ -1,0 +1,6 @@
+{
+  "max_title_len": 20,
+  "max_diff_len": 100,
+  "embed_dim": 128,
+  "hidden_dim": 128
+}
