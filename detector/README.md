@@ -49,3 +49,12 @@ class TransformerDefectDetector(DefectDetector):
 - 按名称缓存检测器实例，避免重复加载。
 - 切换模型时自动调用旧实例的 `unload()`。
 - 程序结束时调用 `shutdown()` 释放所有资源。
+
+## 训练数据与 CommitData 使用建议
+
+`CommitData` 的字段较多，训练时应根据任务目标自行拼接与提取特征，建议：
+
+- 组合提交级统计特征（如 `files_changed`、`total_lines_added` 等）作为数值特征。
+- 从 `files` 中筛选目标语言或类型（如仅 `java`/`xml`），避免噪声。
+- 将 `diff_text` 作为文本特征时，建议自行清洗并按文件或提交聚合。
+- `FileDiff` 的路径与 diff 适合构造“结构化 + 文本”混合特征，方便模型学习变更模式。
