@@ -96,7 +96,11 @@ def run():
         manager.set_current(config.detector_model)
 
     print("正在尝试获取本地仓库的最新一次提交...\n")
-    commit = get_latest_commit()
+    try:
+        commit = get_latest_commit()
+    except RuntimeError as exc:
+        print(f"无法获取提交信息：{exc}")
+        return
 
     print("✔ 已获取最新提交")
     print("提交信息：")
