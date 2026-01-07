@@ -9,7 +9,8 @@ def _prompt_initial_config():
     print("未检测到配置文件，需要进行初始配置。")
     base_url = input("请输入大语言模型 BASE_URL：\n> ").strip()
     api_key = input("\n请输入大语言模型 API_KEY：\n> ").strip()
-    return {"base_url": base_url, "api_key": api_key}
+    model_name = input("\n请输入大语言模型 MODEL_NAME：\n> ").strip()
+    return {"base_url": base_url, "api_key": api_key, "model_name": model_name}
 
 
 def _confirm(prompt):
@@ -20,15 +21,14 @@ def _confirm(prompt):
 def run():
     print("CommitTutor v1.0")
     print("----------------------------------------")
-    print("正在检查用户配置...\n")
 
     if not config_exists():
         config_data = _prompt_initial_config()
-        save_config(config_data)
+        config = save_config(config_data)
         print("\n配置已保存，初始化完成。")
         print("----------------------------------------")
     else:
-        load_config()
+        config = load_config()
 
     print("正在尝试获取本地仓库的最新一次提交...\n")
     commit = get_latest_commit()
@@ -54,7 +54,7 @@ def run():
     print("分析完成，正在综合评价...\n")
     print(f"改进可能性评分：{score:.2f}\n")
 
-    advisor = LLMAdvisor()
+    advisor = LLMAdvisor(config)
     if should_request_advice(score):
         feedback = advisor.generate_feedback(commit, score)
         print("综合评价：")

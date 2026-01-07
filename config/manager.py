@@ -10,13 +10,22 @@ CONFIG_FILE = CONFIG_DIR / "config.json"
 class UserConfig:
     base_url: str
     api_key: str
+    model_name: str
 
     @classmethod
     def from_dict(cls, data):
-        return cls(base_url=data.get("base_url", ""), api_key=data.get("api_key", ""))
+        return cls(
+            base_url=data.get("base_url", ""),
+            api_key=data.get("api_key", ""),
+            model_name=data.get("model_name", ""),
+        )
 
     def to_dict(self):
-        return {"base_url": self.base_url, "api_key": self.api_key}
+        return {
+            "base_url": self.base_url,
+            "api_key": self.api_key,
+            "model_name": self.model_name,
+        }
 
 
 def config_exists(path=CONFIG_FILE):

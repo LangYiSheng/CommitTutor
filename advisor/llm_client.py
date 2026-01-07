@@ -1,4 +1,7 @@
 class LLMAdvisor:
+    def __init__(self, config):
+        self.config = config
+
     def generate_feedback(self, commit_info, score):
         # TODO: Replace with real LLM call.
         return (
