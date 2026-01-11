@@ -1,8 +1,3 @@
-# =========================================
-# Dual-LSTM Commit Direction Classifier
-# Compatible with old torchtext (<=0.6)
-# =========================================
-
 import pandas as pd
 import torch
 import torch.nn as nn
@@ -155,6 +150,8 @@ optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
 def evaluate(model, loader):
     model.eval()
     total_loss = 0.0
+    total = 0
+    correct = 0
 
     with torch.no_grad():
         for title, diff, label in loader:
@@ -164,15 +161,21 @@ def evaluate(model, loader):
 
             pred = model(title, diff)
             loss = criterion(pred, label)
-            total_loss += loss.item()
+
+            total_loss += loss.item() * label.size(0)
+            total += label.size(0)
+
+            preds = (pred >= 0.5).float()
+            correct += (preds == label).sum().item()
 
     model.train()
-    return total_loss / len(loader)
+    return total_loss / max(1, total), correct / max(1, total)
 
-EPOCHS = 20
+EPOCHS = 3
 
 for epoch in range(EPOCHS):
     train_loss = 0.0
+    total = 0
 
     for title, diff, label in train_loader:
         title = title.to(device)
@@ -186,18 +189,21 @@ for epoch in range(EPOCHS):
         loss.backward()
         optimizer.step()
 
-        train_loss += loss.item()
+        train_loss += loss.item() * label.size(0)
+        total += label.size(0)
 
-    val_loss = evaluate(model, val_loader)
+    train_loss = train_loss / max(1, total)
+    val_loss, val_acc = evaluate(model, val_loader)
 
     print(
-        f"Epoch {epoch + 1}/{EPOCHS} | "
+        f"Epoch {epoch + 1:02d}/{EPOCHS} | "
         f"train_loss={train_loss:.4f} | "
-        f"val_loss={val_loss:.4f}"
+        f"val_loss={val_loss:.4f} | "
+        f"val_acc={val_acc:.4f}"
     )
 
-test_loss = evaluate(model, test_loader)
-print("Test loss:", test_loss)
+test_loss, test_acc = evaluate(model, test_loader)
+print(f"Test: loss={test_loss:.4f} | acc={test_acc:.4f}")
 
 import os
 import json

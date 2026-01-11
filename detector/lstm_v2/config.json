@@ -1,0 +1,11 @@
+{
+  "max_title_len": 24,
+  "max_diff_lines": 80,
+  "max_tokens_per_line": 20,
+  "embed_dim": 128,
+  "hidden_dim_word": 128,
+  "hidden_dim_line": 128,
+  "hidden_dim_title": 128,
+  "bidirectional": true,
+  "dropout": 0.3
+}
