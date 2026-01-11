@@ -50,7 +50,7 @@ class LLMAdvisor:
             f"Author: {commit_info.author}",
             f"Message: {commit_info.message}",
             f"Timestamp: {commit_info.timestamp}",
-            f"Score: {score:.2f}",
+            f"可能为缺陷提交的概率: {score:.2f}",
             f"Files changed: {commit_info.files_changed}",
             f"Lines added: {commit_info.total_lines_added}",
             f"Lines deleted: {commit_info.total_lines_deleted}",

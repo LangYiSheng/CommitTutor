@@ -36,10 +36,4 @@ python main.py
 
 ## 开发说明
 
-- 缺陷检测模型需要继承 `detector.model.DefectDetector`，实现 `load` / `analyze`
-  并在 `analyze` 内调用 `_ensure_loaded()` 实现延迟加载。
-- 模型接入指南详见 `detector/README.md`。
-
-## 说明
-
-本项目当前为工程框架搭建阶段，所有模型与业务逻辑均为占位实现。
+- 缺陷检测模型需要继承 `detector.model.DefectDetector`，详见 `detector/README.md`。

@@ -62,14 +62,14 @@ def run_analysis_loop(config, manager):
 
         score = detector.analyze(commit)
 
-        print("分析完成，正在综合评价...\n")
-        print(f"改进可能性评分：{score:.2f}\n")
+        print(f"分析完成，可能存在缺陷的概率为：{score:.2f}\n")
 
         if not _should_request_advice(score):
             continuing_issue = False
             feedback_history = []
             print("本次提交整体表现良好，未发现明显需要改进的地方。")
             if confirm("是否仍希望查看进一步的优化建议？(Y/N)"):
+                print("正在生成建议...")
                 feedback = advisor.generate_feedback(commit, score)
                 print("综合评价：")
                 print(feedback)
@@ -77,6 +77,7 @@ def run_analysis_loop(config, manager):
             continue
 
         history_to_send = feedback_history if continuing_issue else []
+        print("缺陷率较高，正在生成建议...")
         feedback = advisor.generate_feedback(commit, score, history=history_to_send)
         print("综合评价：")
         print(feedback)
@@ -87,7 +88,7 @@ def run_analysis_loop(config, manager):
             pause("输入回车继续获取最新提交")
             continue
 
-        pause("完成新的提交后，输入 F 继续辅导流程：")
+        pause("提交新的修补代码来完善上次的提交，输入 F 继续辅导流程：")
         continuing_issue = True
         feedback_history.append(feedback)
         feedback_history = feedback_history[-3:]
