@@ -1,6 +1,7 @@
 from detector.model import DefectDetector
 from git_utils.models import CommitData
 from detector.registry import register_detector
+from detector.lstm_v1.train.git_diff_tools import extract_diff_payload
 
 import os
 import torch
@@ -143,8 +144,10 @@ class LSTMV1Detector(DefectDetector):
                 # 只分析特定类型的文件
                 if not any(file.file_path.endswith(ext) for ext in file_allowlist):
                     continue
-
-                diff_text = file.diff_text or ""
+                diff_text = extract_diff_payload(file.diff_text)
+                # 空字符串不处理
+                if not diff_text.strip():
+                    continue
                 diff_ids = self._encode(
                     diff_text,
                     self.config["max_diff_len"]
