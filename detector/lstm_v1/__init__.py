@@ -1,6 +1,7 @@
 from detector.model import DefectDetector
 from git_utils.models import CommitData
 from detector.registry import register_detector
+from detector.constants import FILE_ALLOWLIST
 from detector.lstm_v1.train.git_diff_tools import extract_diff_payload
 
 import os
@@ -137,12 +138,10 @@ class LSTMV1Detector(DefectDetector):
 
         file_probs = []
 
-        file_allowlist = ['.java']
-
         with torch.no_grad():
             for file in commit_info.files:
                 # 只分析特定类型的文件
-                if not any(file.file_path.endswith(ext) for ext in file_allowlist):
+                if not any(file.file_path.endswith(ext) for ext in FILE_ALLOWLIST):
                     continue
                 diff_text = extract_diff_payload(file.diff_text)
                 # 空字符串不处理
