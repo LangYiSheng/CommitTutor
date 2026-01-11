@@ -48,8 +48,8 @@ class DualLSTM(nn.Module):
 
         return torch.sigmoid(out).squeeze(1)
 
-@register_detector("LSTM_LanChen")
-class LSTMLanChenDefectDetector(DefectDetector):
+@register_detector("LSTM_v1")
+class LSTMV1Detector(DefectDetector):
 
     def load(self):
         if self._loaded:
@@ -162,4 +162,4 @@ class LSTMLanChenDefectDetector(DefectDetector):
         # 使用最大风险作为 commit 风险
         return float(max(file_probs))
 
-__all__ = ["LSTMLanChenDefectDetector"]
+__all__ = ["LSTMV1Detector"]

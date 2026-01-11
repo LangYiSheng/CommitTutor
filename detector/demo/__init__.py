@@ -3,8 +3,8 @@ from git_utils.models import CommitData
 from detector.registry import register_detector
 
 
-@register_detector("LSTM")
-class LSTMDefectDetector(DefectDetector):
+@register_detector("MODEL_DEMO")
+class DEMODefectDetector(DefectDetector):
     def load(self):
         # TODO: Load LSTM weights/resources.
         self._loaded = True
@@ -15,4 +15,4 @@ class LSTMDefectDetector(DefectDetector):
         return 0.72
 
 
-__all__ = ["LSTMDefectDetector"]
+__all__ = ["DEMODefectDetector"]

@@ -1,5 +1,5 @@
-from detector.lstm import LSTMDefectDetector
-from detector.lstm_lanchen import LSTMLanChenDefectDetector
+from detector.demo import DEMODefectDetector
+from detector.lstm_v1 import LSTMV1Detector
 
 from detector.manager import DetectorManager
 from detector.registry import get_detector_class, list_detectors, register_detector
@@ -9,6 +9,6 @@ __all__ = [
     "get_detector_class",
     "list_detectors",
     "register_detector",
-    "LSTMDefectDetector",
-    "LSTMLanChenDefectDetector",
+    "DEMODefectDetector",
+    "LSTMV1Detector",
 ]
