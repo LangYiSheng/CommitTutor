@@ -136,10 +136,15 @@ class LSTMLanChenDefectDetector(DefectDetector):
 
         file_probs = []
 
+        file_allowlist = ['.java']
+
         with torch.no_grad():
             for file in commit_info.files:
-                diff_text = file.diff_text or ""
+                # 只分析特定类型的文件
+                if not any(file.file_path.endswith(ext) for ext in file_allowlist):
+                    continue
 
+                diff_text = file.diff_text or ""
                 diff_ids = self._encode(
                     diff_text,
                     self.config["max_diff_len"]
