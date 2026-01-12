@@ -1,0 +1,10 @@
+{
+  "max_title_len": 32,
+  "max_diff_len": 256,
+  "max_seq_len": 256,
+  "embed_dim": 128,
+  "num_heads": 4,
+  "num_layers": 2,
+  "ff_dim": 256,
+  "dropout": 0.1
+}
