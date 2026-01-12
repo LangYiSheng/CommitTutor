@@ -3,7 +3,7 @@ import subprocess
 from git_utils.models import CommitData, FileDiff
 
 
-def _run_git(args):
+def _run_git(args, repo_path=None):
     result = subprocess.run(
         ["git", *args],
         check=True,
@@ -11,22 +11,25 @@ def _run_git(args):
         text=True,
         encoding="utf-8",
         errors="replace",
+        cwd=repo_path,
     )
     return result.stdout or ""
 
 
-def _ensure_git_available():
+def _ensure_git_available(repo_path=None):
     try:
-        _run_git(["--version"])
+        _run_git(["--version"], repo_path=repo_path)
     except FileNotFoundError as exc:
         raise RuntimeError("未找到 git 命令，请先安装并配置 git。") from exc
     except subprocess.CalledProcessError as exc:
         raise RuntimeError("无法执行 git 命令，请检查安装或环境配置。") from exc
 
 
-def _ensure_git_repo():
+def _ensure_git_repo(repo_path=None):
     try:
-        output = _run_git(["rev-parse", "--is-inside-work-tree"]).strip().lower()
+        output = _run_git(
+            ["rev-parse", "--is-inside-work-tree"], repo_path=repo_path
+        ).strip().lower()
     except subprocess.CalledProcessError as exc:
         raise RuntimeError("当前目录未找到 git 仓库。") from exc
 
@@ -34,7 +37,7 @@ def _ensure_git_repo():
         raise RuntimeError("当前目录未找到 git 仓库。")
 
     try:
-        _run_git(["rev-parse", "HEAD"])
+        _run_git(["rev-parse", "HEAD"], repo_path=repo_path)
     except subprocess.CalledProcessError as exc:
         raise RuntimeError("当前 git 仓库暂无提交记录。") from exc
 
@@ -104,18 +107,24 @@ def _parse_diffs(output):
     return diffs
 
 
-def get_latest_commit():
-    _ensure_git_available()
-    _ensure_git_repo()
+def get_latest_commit(repo_path=None):
+    _ensure_git_available(repo_path=repo_path)
+    _ensure_git_repo(repo_path=repo_path)
 
-    commit_id = _run_git(["log", "-1", "--format=%H"]).strip()
-    author = _run_git(["log", "-1", "--format=%an"]).strip()
-    message = _run_git(["log", "-1", "--format=%s"]).strip()
-    timestamp_raw = _run_git(["log", "-1", "--format=%ct"]).strip()
+    commit_id = _run_git(["log", "-1", "--format=%H"], repo_path=repo_path).strip()
+    author = _run_git(["log", "-1", "--format=%an"], repo_path=repo_path).strip()
+    message = _run_git(["log", "-1", "--format=%s"], repo_path=repo_path).strip()
+    timestamp_raw = _run_git(
+        ["log", "-1", "--format=%ct"], repo_path=repo_path
+    ).strip()
     timestamp = int(timestamp_raw) if timestamp_raw.isdigit() else 0
 
-    numstat_output = _run_git(["show", "--numstat", "--format=", "HEAD"])
-    diff_output = _run_git(["show", "-U0", "--no-color", "--format=", "HEAD"])
+    numstat_output = _run_git(
+        ["show", "--numstat", "--format=", "HEAD"], repo_path=repo_path
+    )
+    diff_output = _run_git(
+        ["show", "-U0", "--no-color", "--format=", "HEAD"], repo_path=repo_path
+    )
 
     diff_map = _parse_diffs(diff_output)
     files = []
